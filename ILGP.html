@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>For Gaja — A Gift</title>
+<style>
+:root{
+  --bg1:#0f172a;
+  --bg2:#032b44;
+  --accent:#ff6b81;
+  --accent2:#ffd166;
+  --card:rgba(255,255,255,0.05);
+  --text:#f2f7ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+.container{
+  max-width:540px;
+  margin:auto;
+  padding:16px;
+}
+.header{text-align:center;margin-bottom:18px}
+.header h1{font-size:22px;margin:10px 0}
+.header p{font-size:15px;opacity:0.85;margin:0}
+.card{
+  background:var(--card);
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:16px;
+  box-shadow:0 3px 12px rgba(0,0,0,0.25);
+}
+h2,h3,h4{margin-top:0}
+.btn{
+  display:inline-block;
+  padding:12px 18px;
+  margin:6px 4px;
+  border:0;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  color:#102233;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+}
+.story p{line-height:1.55}
+.poem{
+  margin-top:10px;
+  padding:12px;
+  border-radius:10px;
+  font-style:italic;
+  background:rgba(255,255,255,0.06);
+  font-size:15px;
+}
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+.gallery img{
+  width:100%;
+  height:auto;
+  border-radius:8px;
+  display:block;
+}
+.avatar{
+  width:100px;height:100px;
+  border-radius:12px;
+  margin:0 auto 10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:40px;
+  background:linear-gradient(135deg,#ffb3c6,#ffe6b3);
+  color:#43132b;
+}
+.info{text-align:center}
+.small{font-size:13px;opacity:0.9}
+.editable{background:rgba(255,255,255,0.08);padding:6px;border-radius:8px;min-height:20px}
+.sender{margin-top:14px;text-align:center}
+footer{font-size:12px;opacity:0.8;text-align:center;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>For Gaja 💖</h1>
+    <p>A little surprise for you</p>
+  </div>
+
+  <div class="card story">
+    <h2>Hey Gaja ❤️</h2>
+    <p>Every day with you feels brighter and softer. You make little moments into memories I will keep forever.</p>
+    <div class="poem" id="poem">
+      "You are the gentle pause in my busy song,<br>
+      the warm cup on a restless night;<br>
+      the laugh that chases shadows long —<br>
+      my favorite, my compass, my light."
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <button class="btn" id="playNote">Play a note</button>
+      <button class="btn" id="confettiBtn">Confetti 🎉</button>
+    </div>
+  </div>
+
+  <div class="card profile">
+    <div class="avatar" id="avatar">🌸</div>
+    <div class="info">
+      <h3>Gaja</h3>
+      <p class="small">Sweet, caring and loved.</p>
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <button class="btn" id="fullscreen">Fullscreen</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Memories</h3>
+    <div class="gallery">
+        <img src="./photo1.jpg" alt="Photo 1"/>
+        <img src="./photo2.jpg" alt="Photo 2"/>
+        <img src="./photo3.jpg" alt="Photo 3"/>
+        <img src="./photo4.jpg" alt="Photo 4"/>
+    </div>
+    <div class="sender">
+      <div class="small">Signed</div>
+      <div class="editable" id="signature" contenteditable="true">With love — Rocky Balboa</div>
+    </div>
+  </div>
+
+  <footer>Made with care — optimized for your phone screen 💕</footer>
+</div>
+
+<script>
+/* play gentle note */
+document.getElementById('playNote').addEventListener('click', ()=>{
+  try{
+    const AudioContext = window.AudioContext||window.webkitAudioContext;
+    const ctx=new AudioContext();
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.type='sine'; o.frequency.value=392;
+    g.gain.value=0.0001;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.12,ctx.currentTime+0.08);
+    g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+1.7);
+    setTimeout(()=>{o.stop();ctx.close()},1800);
+  }catch(e){ alert('Audio not supported'); }
+});
+/* confetti */
+function confettiBurst(){
+  const n=25;
+  for(let i=0;i<n;i++){
+    const c=document.createElement('div');
+    c.style.position='fixed';
+    c.style.left=(50+Math.random()*40-20)+'%';
+    c.style.top='20%';
+    c.style.width='8px';c.style.height='8px';
+    c.style.background=['#ff6b81','#ffd166','#7ee8fa','#9b55ff'][Math.floor(Math.random()*4)];
+    c.style.borderRadius='2px';
+    document.body.appendChild(c);
+    const dx=(Math.random()-0.5)*300;
+    const dy=400+Math.random()*200;
+    c.animate([{transform:'translate(0,0)',opacity:1},{transform:`translate(${dx}px,${dy}px)`,opacity:0}],{duration:1200+Math.random()*600});
+    setTimeout(()=>c.remove(),2000);
+  }
+}
+document.getElementById('confettiBtn').addEventListener('click',confettiBurst);
+/* signature save */
+const sig=document.getElementById('signature');
+sig.addEventListener('input',()=>localStorage.setItem('gaja_sig',sig.innerHTML));
+window.addEventListener('load',()=>{const s=localStorage.getItem('gaja_sig');if(s)sig.innerHTML=s});
+/* fullscreen */
+document.getElementById('fullscreen').addEventListener('click',()=>{
+  if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+});
+</script>
+</body>
+</html>
+
