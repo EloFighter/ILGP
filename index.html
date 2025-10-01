@@ -110,14 +110,23 @@
         .photo-gallery {
             position: relative;
             width: 100%;
-            overflow: hidden;
+            /* Allow dots and shadows to be visible — actual clipping happens in .photo-viewport */
+            overflow: visible;
             margin-bottom: 40px;
+        }
+
+        /* New viewport wrapper to clip the sliding cards while keeping dots visible */
+        .photo-viewport {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 0; /* inherit if needed */
         }
 
         .photo-slider {
             display: flex;
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             touch-action: pan-x;
+            will-change: transform;
         }
 
         .photo-card {
@@ -136,11 +145,13 @@
         }
 
         .photo-content img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            display: block;
-        }
+    width: 100%;
+    aspect-ratio: 9 / 16;   /* bolj stisnjeno kot 9/16 */
+    max-height: 1000px;     /* doda omejitev višine */
+    object-fit: cover;
+    display: block;
+    border-radius: 15px;   /* opcijsko malo zaobljeni robovi */
+}
 
         .photo-caption {
             padding: 25px 20px;
@@ -157,6 +168,8 @@
             justify-content: center;
             gap: 12px;
             margin-top: 20px;
+            position: relative;
+            z-index: 3; /* be above photo content shadows */
         }
 
         .dot {
@@ -229,10 +242,10 @@
 
         .love-note p {
             color: rgba(255,255,255,0.95);
-            line-height: 1.8;
+            line-height: 1.4;
             font-size: 1.05em;
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 6px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
@@ -284,6 +297,22 @@
             font-size: 1.5em;
             margin-bottom: 15px;
             text-shadow: 0 0 15px rgba(255,107,157,0.8);
+        }
+
+        .enable-shake {
+            margin-top: 10px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .enable-shake[disabled] {
+            opacity: 0.5;
+            cursor: default;
         }
 
         .shake-message {
@@ -355,29 +384,31 @@
     <div class="container">
         <div class="header">
             <h1>Za Gajo</h1>
-            <p>Vsak trenutek s tabo je moj najljubši trenutek</p>
+            <p>Mojo predrago punco in bodočo ženo. Zate svet, zate vse.</p>
         </div>
 
         <div class="swipe-hint">← Povleci za več fotografij →</div>
 
         <div class="photo-gallery">
-            <div class="photo-slider" id="photoSlider">
-                <div class="photo-card">
-                    <div class="photo-content">
-                        <img src="photo1.jpg" alt="Najin spomin">
-                        <div class="photo-caption">Tvoj nasmeh razsvetli moj svet</div>
+            <div class="photo-viewport">
+                <div class="photo-slider" id="photoSlider">
+                    <div class="photo-card">
+                        <div class="photo-content">
+                            <img src="tphoto1.jpg" alt="Najin spomin">
+                            <div class="photo-caption">Vsaka pustolovščina je lepša s tabo</div>
+                        </div>
                     </div>
-                </div>
-                <div class="photo-card">
-                    <div class="photo-content">
-                        <img src="photo2.jpg" alt="Najin spomin">
-                        <div class="photo-caption">Vsaka pustolovščina je lepša s tabo</div>
+                    <div class="photo-card">
+                        <div class="photo-content">
+                            <img src="tphoto2.jpg" alt="Najin spomin">
+                            <div class="photo-caption">Tvoj nasmeh razsvetli moj svet</div>
+                        </div>
                     </div>
-                </div>
-                <div class="photo-card">
-                    <div class="photo-content">
-                        <img src="photo3.jpg" alt="Najin spomin">
-                        <div class="photo-caption">Navadne trenutke spreminjaš v izjemne</div>
+                    <div class="photo-card">
+                        <div class="photo-content">
+                            <img src="photo3.jpg" alt="Najin spomin">
+                            <div class="photo-caption">Navadne trenutke spreminjaš v izjemne</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -392,19 +423,26 @@
 
         <div class="shake-feature">
             <h3>📱 Stresni telefon za sporočilo</h3>
+            <button id="enableShake" class="enable-shake">Omogoči stres (za iPhone/Safari)</button>
             <div class="shake-message" id="shakeMessage">Poskusi!</div>
         </div>
 
         <div class="love-note">
             <h2>Zakaj Te Imam Rad</h2>
-            <p>V svetu polnem kaosa si ti moj mir.</p>
-            <p>Tvoj smeh je melodija, ki je nikoli ne želim nehati poslušati, in tvoja prisotnost naredi vse pravilno.</p>
-            <p>Pokazala si mi, kaj pomeni resnično skrbeti za nekoga, in hvaležen sem za vsak dan, ki ga preživiva skupaj.</p>
+            <p>V tvojih očeh se zvezde zbudijo,</p>
+            <p>ko se nasmehneš, srca se spojijo.</p>    
+            <p></p>    
+            <p>Kot veter nežno mi dušo objameš,</p>   
+            <p>kot sonce si, ki vame zasiješ.</p>
+            <p>Gaja, ti si pesem brez konca,</p>    
+            <p>najlepša melodija jutranjega sonca.</p>    
+            <p> Ob tebi svet postane lahek in tih,</p>   
+            <p>v tvoji ljubezni sem vedno domač in živ.</p>    
             
             <div class="reasons-grid">
                 <div class="reason-card">
                     <h3>∞</h3>
-                    <p>Razlogov, da te cenim</p>
+                    <p>Nešteto razlogov, da te cenim</p>
                 </div>
                 <div class="reason-card">
                     <h3>♡</h3>
@@ -473,7 +511,7 @@
         slider.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             isDragging = true;
-        });
+        }, {passive: true});
 
         slider.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
@@ -482,7 +520,7 @@
             const offset = -currentSlide * 100 + (diff / window.innerWidth * 100);
             slider.style.transition = 'none';
             slider.style.transform = `translateX(${offset}%)`;
-        });
+        }, {passive: true});
 
         slider.addEventListener('touchend', (e) => {
             if (!isDragging) return;
@@ -503,7 +541,7 @@
             }
         });
 
-        // Tap counter
+        // Tap counter (upgraded to pointerdown for touch + mouse compatibility)
         const heartTap = document.getElementById('heartTap');
         const tapCount = document.getElementById('tapCount');
         const tapMessage = document.getElementById('tapMessage');
@@ -520,58 +558,158 @@
             "Moja ljubezen! 💞"
         ];
 
-        heartTap.addEventListener('click', (e) => {
+        function handleHeartTap(e) {
+            // prepreči dvojni event (pointerdown + click)
+            e.preventDefault();
+
             taps++;
             tapCount.textContent = taps;
             tapMessage.textContent = messages[Math.min(taps - 1, messages.length - 1)];
-            
+
+            let clientX = e.clientX, clientY = e.clientY;
+            // če je touch event (pointerType === 'touch') poišči touches
+            if (e.touches && e.touches[0]) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            }
+
             // Burst animacija
             for (let i = 0; i < 5; i++) {
                 setTimeout(() => {
                     const burst = document.createElement('div');
                     burst.className = 'love-burst';
                     burst.textContent = '♡';
-                    burst.style.left = e.clientX + (Math.random() - 0.5) * 50 + 'px';
-                    burst.style.top = e.clientY + (Math.random() - 0.5) * 50 + 'px';
+                    // pozicija v viewportu
+                    burst.style.left = (clientX + (Math.random() - 0.5) * 50) + 'px';
+                    burst.style.top = (clientY + (Math.random() - 0.5) * 50) + 'px';
                     document.body.appendChild(burst);
                     setTimeout(() => burst.remove(), 1000);
                 }, i * 50);
             }
-        });
+        }
 
-        // Shake detekcija
+        // Uporabi pointerdown (pokrije touch + mouse)
+        heartTap.addEventListener('pointerdown', handleHeartTap);
+
+        // Shake detekcija (robustno)
         const shakeMessage = document.getElementById('shakeMessage');
         const shakeMessages = [
             "Ti si moje vse! 💕",
             "Ljubim tvoj nasmeh! 😊",
             "Hvala, da si v mojem življenju! 🌟",
-            "Z tabo je vse lepše! ✨",
+            "S tabo je vse lepše! ✨",
             "Moja najljubša oseba! 💖",
             "Vsak dan s tabo je dar! 🎁",
             "Ti si moja sreča! 🌈",
             "Neskončno hvaležen zate! 💝"
         ];
         let lastShake = 0;
+        let motionEnabled = false;
+        let motionHandlerRef = null;
 
-        if (window.DeviceMotionEvent) {
-            window.addEventListener('devicemotion', (e) => {
-                const acc = e.accelerationIncludingGravity;
-                const threshold = 15;
-                const now = Date.now();
-                
-                if (now - lastShake < 1000) return;
-                
-                if (Math.abs(acc.x) > threshold || Math.abs(acc.y) > threshold || Math.abs(acc.z) > threshold) {
-                    lastShake = now;
-                    const randomMsg = shakeMessages[Math.floor(Math.random() * shakeMessages.length)];
-                    shakeMessage.textContent = randomMsg;
-                    shakeMessage.style.animation = 'none';
-                    setTimeout(() => {
-                        shakeMessage.style.animation = 'fadeInUp 0.5s ease';
-                    }, 10);
-                }
-            });
+        function motionHandler(e) {
+            // previdno z nullami
+            const acc = (e && (e.accelerationIncludingGravity || e.acceleration)) || null;
+            if (!acc) return;
+
+            const now = Date.now();
+            const threshold = 12; // malenkost nižji prag za boljšo odzivnost na telefone
+
+            // preveri vrednosti (nekatere naprave imajo undefined za posamezno os)
+            const ax = Math.abs(acc.x || 0);
+            const ay = Math.abs(acc.y || 0);
+            const az = Math.abs(acc.z || 0);
+
+            if (now - lastShake < 1000) return;
+
+            if (ax > threshold || ay > threshold || az > threshold) {
+                lastShake = now;
+                const randomMsg = shakeMessages[Math.floor(Math.random() * shakeMessages.length)];
+                shakeMessage.textContent = randomMsg;
+                // kratek reflow za animacijo
+                shakeMessage.style.animation = 'none';
+                setTimeout(() => {
+                    shakeMessage.style.animation = 'fadeInUp 0.5s ease';
+                }, 10);
+            }
         }
+
+        function setupDeviceMotionListener() {
+            if (motionEnabled) return;
+            motionEnabled = true;
+            motionHandlerRef = motionHandler;
+            window.addEventListener('devicemotion', motionHandlerRef, {passive: true});
+            // posodobi UI
+            const btn = document.getElementById('enableShake');
+            if (btn) {
+                btn.textContent = 'Stres omogočen ✅';
+                btn.disabled = true;
+            }
+        }
+
+        async function requestMotionPermission() {
+            const btn = document.getElementById('enableShake');
+            if (!window.DeviceMotionEvent) {
+                // ni podpore
+                btn.textContent = 'Senzor ni podprt';
+                btn.disabled = true;
+                return;
+            }
+
+            // iOS 13+ Safari zahteva requestPermission
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                try {
+                    const result = await DeviceMotionEvent.requestPermission();
+                    if (result === 'granted') {
+                        setupDeviceMotionListener();
+                    } else {
+                        btn.textContent = 'Dostop zavrnjen';
+                        btn.disabled = false;
+                    }
+                } catch (err) {
+                    console.error('Permission request failed', err);
+                    btn.textContent = 'Napaka';
+                }
+            } else {
+                // ostali brskalniki - dodaj direktno listener
+                setupDeviceMotionListener();
+            }
+        }
+
+        // priklop na gumb
+        const enableBtn = document.getElementById('enableShake');
+        enableBtn.addEventListener('click', (e) => {
+            requestMotionPermission();
+        });
+
+        // kot dodatno opcijo: poskusi omogočiti ob prvi interakciji (če user ne pritisne gumba)
+        // vendar ne pošljemo avtomatičnega requesta na iOS brez uporabnikove geste; tukaj poslušamo dotik
+        function tryEnableOnFirstTouch() {
+            if (motionEnabled) return;
+            // če requestPermission obstaja — pusti na gumbu, saj mora uporabnik potrditi (in gumb je gesto)
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                // ne delamo avtomatskega requesta - gumb bo to naredil
+                return;
+            } else {
+                // pri brskalnikih brez requestPermission lahko direktno nastavimo listener ob prvi interakciji
+                setupDeviceMotionListener();
+            }
+            window.removeEventListener('touchstart', tryEnableOnFirstTouch);
+        }
+        window.addEventListener('touchstart', tryEnableOnFirstTouch, {passive: true});
+
+        // Če brskalnik že podpira DeviceMotion brez permisije, omogoči takoj
+        if (window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission !== 'function') {
+            // omogoči samodejno (ni potrebe po requestu)
+            setupDeviceMotionListener();
+        }
+
+        // Clean up on pagehide (optional)
+        window.addEventListener('pagehide', () => {
+            if (motionHandlerRef) {
+                window.removeEventListener('devicemotion', motionHandlerRef);
+            }
+        });
     </script>
 </body>
 </html>
